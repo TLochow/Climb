@@ -5,34 +5,15 @@
 [ext_resource path="res://scenes/PlayerHand.tscn" type="PackedScene" id=3]
 [ext_resource path="res://graphics/player_arm.png" type="Texture" id=4]
 
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 4, 1 )
+
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 4.0
 height = 7.0
 
-[sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 4, 1 )
-
 [node name="Player" type="Node2D"]
 script = ExtResource( 2 )
-
-[node name="PlayerBody" type="RigidBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerBody"]
-shape = SubResource( 1 )
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="Camera2D" type="Camera2D" parent="PlayerBody"]
-current = true
-zoom = Vector2( 0.2, 0.2 )
-limit_bottom = 750
-
-[node name="Sprite" type="Sprite" parent="PlayerBody"]
-texture = ExtResource( 1 )
-__meta__ = {
-"_edit_lock_": true
-}
 
 [node name="LeftArm" type="Node2D" parent="."]
 position = Vector2( -3, 0 )
@@ -180,3 +161,25 @@ __meta__ = {
 "RightHand",
 ] instance=ExtResource( 3 )]
 position = Vector2( 18, 0 )
+
+[node name="PlayerBody" type="RigidBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerBody"]
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Camera2D" type="Camera2D" parent="PlayerBody"]
+current = true
+zoom = Vector2( 0.2, 0.2 )
+limit_left = -500
+limit_top = -1000
+limit_right = 3000
+limit_bottom = 750
+
+[node name="Sprite" type="Sprite" parent="PlayerBody"]
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
