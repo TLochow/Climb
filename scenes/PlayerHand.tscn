@@ -27,3 +27,9 @@ collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MountainDetector"]
 shape = SubResource( 2 )
+
+[node name="RegainControlTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="RegainControlTimer" to="." method="_on_RegainControlTimer_timeout"]

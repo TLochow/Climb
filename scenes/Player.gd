@@ -1,6 +1,6 @@
 extends Node2D
 
-signal LostConcentration
+signal LostFocus
 
 onready var Body = $PlayerBody
 onready var LeftHand = get_tree().get_nodes_in_group("LeftHand")[0]
@@ -10,8 +10,6 @@ var IsLeftHandActive = true
 onready var Cam = $PlayerBody/Camera2D
 var CamZoom = 0.5
 
-var TakesInput = true
-
 func _ready():
 	SetHandsActive()
 
@@ -19,7 +17,7 @@ func _physics_process(delta):
 	Body.rotation = lerp_angle(Body.rotation, 0.0, delta * 10.0)
 
 func _input(event):
-	if event.is_action_pressed("mouse_click") and TakesInput:
+	if event.is_action_pressed("mouse_click"):
 		var canGrab
 		if IsLeftHandActive:
 			canGrab = LeftHand.CanGrab()
@@ -39,16 +37,12 @@ func SetHandsActive():
 	LeftHand.SetActive(IsLeftHandActive)
 	RightHand.SetActive(not IsLeftHandActive)
 
+func LooseFocus():
+	emit_signal("LostFocus")
+
 func Hit():
-	if TakesInput:
-		TakesInput = false
-		emit_signal("LostConcentration")
-		LeftHand.SetActive(true)
-		RightHand.SetActive(true)
-		LeftHand.TakesInput = false
-		RightHand.TakesInput = false
-		yield(get_tree().create_timer(2.0), "timeout")
-		LeftHand.TakesInput = true
-		RightHand.TakesInput = true
-		SetHandsActive()
-		TakesInput = true
+	LooseFocus()
+	if IsLeftHandActive:
+		LeftHand.LooseGrip()
+	else:
+		RightHand.LooseGrip()

@@ -12,7 +12,9 @@ extents = Vector2( 4, 1 )
 radius = 4.0
 height = 7.0
 
-[node name="Player" type="Node2D"]
+[node name="Player" type="Node2D" groups=[
+"Player",
+]]
 script = ExtResource( 2 )
 
 [node name="LeftArm" type="Node2D" parent="."]
@@ -174,7 +176,7 @@ __meta__ = {
 
 [node name="Camera2D" type="Camera2D" parent="PlayerBody"]
 current = true
-zoom = Vector2( 0.2, 0.2 )
+zoom = Vector2( 5, 5 )
 limit_left = -500
 limit_top = -1000
 limit_right = 3000

@@ -2,8 +2,10 @@ extends RigidBody2D
 
 export(bool) var IsLeftHand = false
 
+onready var Player = get_tree().get_nodes_in_group("Player")[0]
 onready var FixedPos = get_global_position()
 onready var MountainDetector = $MountainDetector
+onready var RegainControlTimer = $RegainControlTimer
 
 var OtherHand
 var Active = false
@@ -16,7 +18,7 @@ func _ready():
 	else:
 		OtherHand = get_tree().get_nodes_in_group("LeftHand")[0]
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var pos = get_global_position()
 	if Active:
 		if TakesInput:
@@ -35,4 +37,18 @@ func SetActive(value):
 		FixedPos = get_global_position()
 
 func CanGrab():
-	return MountainDetector.get_overlapping_bodies().size() > 0
+	if not TakesInput:
+		return false
+	var canGrab = MountainDetector.get_overlapping_areas().size() > 0
+	if not canGrab:
+		Player.LooseFocus()
+		LooseGrip()
+	return canGrab
+
+func LooseGrip():
+	if TakesInput:
+		TakesInput = false
+		RegainControlTimer.start()
+
+func _on_RegainControlTimer_timeout():
+	TakesInput = true
