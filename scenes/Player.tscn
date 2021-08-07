@@ -1,0 +1,182 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://graphics/player_base.png" type="Texture" id=1]
+[ext_resource path="res://scenes/Player.gd" type="Script" id=2]
+[ext_resource path="res://scenes/PlayerHand.tscn" type="PackedScene" id=3]
+[ext_resource path="res://graphics/player_arm.png" type="Texture" id=4]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 4.0
+height = 7.0
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 4, 1 )
+
+[node name="Player" type="Node2D"]
+script = ExtResource( 2 )
+
+[node name="PlayerBody" type="RigidBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerBody"]
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Camera2D" type="Camera2D" parent="PlayerBody"]
+current = true
+zoom = Vector2( 0.2, 0.2 )
+limit_bottom = 750
+
+[node name="Sprite" type="Sprite" parent="PlayerBody"]
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="LeftArm" type="Node2D" parent="."]
+position = Vector2( -3, 0 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Shoulder" type="PinJoint2D" parent="LeftArm"]
+node_a = NodePath("../../PlayerBody")
+node_b = NodePath("../UpperArm")
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="UpperArm" type="RigidBody2D" parent="LeftArm"]
+position = Vector2( -3, 0 )
+collision_layer = 0
+collision_mask = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="LeftArm/UpperArm"]
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftArm/UpperArm"]
+shape = SubResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Elbow" type="PinJoint2D" parent="LeftArm"]
+position = Vector2( -6, 0 )
+node_a = NodePath("../UpperArm")
+node_b = NodePath("../LowerArm")
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="LowerArm" type="RigidBody2D" parent="LeftArm"]
+position = Vector2( -9, 0 )
+collision_layer = 0
+collision_mask = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="LeftArm/LowerArm"]
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftArm/LowerArm"]
+shape = SubResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Wrist" type="PinJoint2D" parent="LeftArm"]
+position = Vector2( -12, 0 )
+node_a = NodePath("../LowerArm")
+node_b = NodePath("../Hand")
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Hand" parent="LeftArm" groups=[
+"LeftHand",
+] instance=ExtResource( 3 )]
+position = Vector2( -12, 0 )
+IsLeftHand = true
+
+[node name="RightArm" type="Node2D" parent="."]
+position = Vector2( -3, 0 )
+
+[node name="Shoulder" type="PinJoint2D" parent="RightArm"]
+position = Vector2( 6, 0 )
+node_a = NodePath("../../PlayerBody")
+node_b = NodePath("../UpperArm")
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="UpperArm" type="RigidBody2D" parent="RightArm"]
+position = Vector2( 9, 0 )
+collision_layer = 0
+collision_mask = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="RightArm/UpperArm"]
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightArm/UpperArm"]
+shape = SubResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Elbow" type="PinJoint2D" parent="RightArm"]
+position = Vector2( 12, 0 )
+node_a = NodePath("../UpperArm")
+node_b = NodePath("../LowerArm")
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="LowerArm" type="RigidBody2D" parent="RightArm"]
+position = Vector2( 15, 0 )
+collision_layer = 0
+collision_mask = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="RightArm/LowerArm"]
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightArm/LowerArm"]
+shape = SubResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Wrist" type="PinJoint2D" parent="RightArm"]
+position = Vector2( 18, 0 )
+node_a = NodePath("../LowerArm")
+node_b = NodePath("../Hand")
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Hand" parent="RightArm" groups=[
+"RightHand",
+] instance=ExtResource( 3 )]
+position = Vector2( 18, 0 )
