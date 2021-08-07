@@ -1,5 +1,7 @@
 extends Node2D
 
+signal LostConcentration
+
 onready var Body = $PlayerBody
 onready var LeftHand = get_tree().get_nodes_in_group("LeftHand")[0]
 onready var RightHand = get_tree().get_nodes_in_group("RightHand")[0]
@@ -36,3 +38,17 @@ func _input(event):
 func SetHandsActive():
 	LeftHand.SetActive(IsLeftHandActive)
 	RightHand.SetActive(not IsLeftHandActive)
+
+func Hit():
+	if TakesInput:
+		TakesInput = false
+		emit_signal("LostConcentration")
+		LeftHand.SetActive(true)
+		RightHand.SetActive(true)
+		LeftHand.TakesInput = false
+		RightHand.TakesInput = false
+		yield(get_tree().create_timer(2.0), "timeout")
+		LeftHand.TakesInput = true
+		RightHand.TakesInput = true
+		SetHandsActive()
+		TakesInput = true

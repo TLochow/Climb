@@ -19,3 +19,6 @@ func _process(delta):
 		if pos.x > 3300.0:
 			call_deferred("queue_free")
 	set_position(pos)
+
+func _on_PlayerDetector_body_entered(body):
+	body.get_parent().Hit()
