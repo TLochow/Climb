@@ -1,10 +1,18 @@
 extends Node2D
 
+var PLAYERSCENE = preload("res://scenes/Player.tscn")
+var STORYTEXTSCENE = preload("res://scenes/StoryText.tscn")
 var SEAGULLSCENE = preload("res://scenes/Seagull.tscn")
 onready var SeagullsNode = $Seagulls
 
-onready var Player = get_tree().get_nodes_in_group("PlayerBody")[0]
-onready var PlayerCamera = get_tree().get_nodes_in_group("PlayerCamera")[0]
+onready var EffectsNode = $Effects
+onready var TextNode = $UI/StoryTexts
+onready var ColorTween = $UI/ColorRect/Tween
+onready var StartPointFinder = $StartPointFinder
+onready var StartPointFinderTween = $StartPointFinder/Tween
+
+var Player
+var PlayerCamera
 
 var LastHeight
 var CurrentZenBase
@@ -15,19 +23,48 @@ var CamZoom = 0.5
 var MaxZen = 1000.0
 var MaxPoints = 800000.0
 
+var IntroTexts = [
+	"""Test Text 1""",
+	"""Test Text 2""",
+	"""Test Text 3""",
+	"""Test Text 4""",
+	"""Test Text 5""",
+	"""Test Text 6"""
+]
+var IntroTextPos = 0
+var IntroGoingLeft
+var FoundStartpoint = false
+
 func _ready():
 	randomize()
-	LastHeight = Player.get_position().y
-	CurrentZenBase = LastHeight
-	$Player.connect("LostFocus", self, "PlayerLostFocus")
+	PlayIntroText()
+
+func PlayIntroText():
+	if IntroTextPos < IntroTexts.size():
+		var text = STORYTEXTSCENE.instance()
+		text.Text = IntroTexts[IntroTextPos]
+		text.set_position(Vector2(512.0, 256.0))
+		text.connect("Done", self, "PlayIntroText")
+		TextNode.add_child(text)
+		IntroTextPos += 1
+	else:
+		IntroGoingLeft = randi() % 2 == 0
+		var startPointStartPos = Vector2(-640.0, 690.0)
+		var startPointEndPos = Vector2(3000.0, 690.0)
+		if IntroGoingLeft:
+			startPointEndPos = startPointStartPos
+			startPointStartPos = Vector2(3000.0, 690.0)
+		StartPointFinderTween.interpolate_property(StartPointFinder, "position", startPointStartPos, startPointEndPos, 5.0, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		StartPointFinderTween.start()
 
 func _process(delta):
-	var playerHeight = Player.get_position().y
-	Zen = max(CurrentZenBase - playerHeight, 0.0)
-	if playerHeight < LastHeight:
-		StoryPoints += (LastHeight - playerHeight) * Zen
-		LastHeight = playerHeight
-	SetZenEffect(delta)
+	if Player:
+		var playerHeight = Player.get_position().y
+		Zen = max(CurrentZenBase - playerHeight, 0.0)
+		if playerHeight < LastHeight:
+			StoryPoints += (LastHeight - playerHeight) * Zen
+			LastHeight = playerHeight
+		SetZenEffect(delta)
 
 func SetZenEffect(delta):
 	var zenValue = min(Zen, MaxZen)
@@ -48,3 +85,18 @@ func _on_SeagullTimer_timeout():
 		spawnWidth = -1000.0
 	seagull.set_position(Vector2(spawnWidth, spawnHeight))
 	SeagullsNode.add_child(seagull)
+
+func _on_StartPointFinder_area_entered(area):
+	if not FoundStartpoint:
+		FoundStartpoint = true
+		var player = PLAYERSCENE.instance()
+		player.set_position(StartPointFinder.get_position())
+		player.connect("LostFocus", self, "PlayerLostFocus")
+		$PlayerNode.call_deferred("add_child", player)
+		ColorTween.interpolate_property($UI/ColorRect, "color", Color(0.0, 0.0, 0.0, 1.0), Color(0.0, 0.0, 0.0, 0.0), 5.0, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+		ColorTween.start()
+		yield(get_tree().create_timer(0.2), "timeout")
+		Player = get_tree().get_nodes_in_group("PlayerBody")[0]
+		PlayerCamera = get_tree().get_nodes_in_group("PlayerCamera")[0]
+		LastHeight = Player.get_position().y
+		CurrentZenBase = LastHeight

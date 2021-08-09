@@ -1,9 +1,11 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/TileMap.tscn" type="PackedScene" id=1]
-[ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/Main.gd" type="Script" id=3]
 [ext_resource path="res://scenes/GrabArea.tscn" type="PackedScene" id=4]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 6.0
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 3 )
@@ -21,8 +23,16 @@ tile_data = PoolIntArray( -2424779, 3, 0, -2424778, 4, 0, -2424777, 9, 0, -24247
 [node name="GrabArea" parent="GrabAreas" instance=ExtResource( 4 )]
 position = Vector2( 928, -584 )
 
-[node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 960, 696 )
+[node name="PlayerNode" type="Node2D" parent="."]
+
+[node name="StartPointFinder" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StartPointFinder"]
+shape = SubResource( 1 )
+
+[node name="Tween" type="Tween" parent="StartPointFinder"]
 
 [node name="Seagulls" type="Node2D" parent="."]
 
@@ -30,15 +40,22 @@ position = Vector2( 960, 696 )
 wait_time = 1.5
 autostart = true
 
-[node name="ShaderLayer" type="CanvasLayer" parent="."]
+[node name="Effects" type="Node2D" parent="."]
+
+[node name="UI" type="CanvasLayer" parent="."]
 layer = 50
 
-[node name="Shader" type="ColorRect" parent="ShaderLayer"]
+[node name="ColorRect" type="ColorRect" parent="UI"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 1, 1, 1, 0 )
+color = Color( 0, 0, 0, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Tween" type="Tween" parent="UI/ColorRect"]
+
+[node name="StoryTexts" type="Node2D" parent="UI"]
+
+[connection signal="area_entered" from="StartPointFinder" to="." method="_on_StartPointFinder_area_entered"]
 [connection signal="timeout" from="Seagulls/SeagullTimer" to="." method="_on_SeagullTimer_timeout"]
