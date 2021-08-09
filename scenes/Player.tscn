@@ -164,7 +164,9 @@ __meta__ = {
 ] instance=ExtResource( 3 )]
 position = Vector2( 18, 0 )
 
-[node name="PlayerBody" type="RigidBody2D" parent="."]
+[node name="PlayerBody" type="RigidBody2D" parent="." groups=[
+"PlayerBody",
+]]
 collision_layer = 33
 collision_mask = 33
 
@@ -174,13 +176,15 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Camera2D" type="Camera2D" parent="PlayerBody"]
+[node name="Camera2D" type="Camera2D" parent="PlayerBody" groups=[
+"PlayerCamera",
+]]
 current = true
-zoom = Vector2( 5, 5 )
 limit_left = -500
 limit_top = -1000
 limit_right = 3000
 limit_bottom = 750
+smoothing_enabled = true
 
 [node name="Sprite" type="Sprite" parent="PlayerBody"]
 texture = ExtResource( 1 )

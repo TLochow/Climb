@@ -27,7 +27,18 @@ position = Vector2( 960, 696 )
 [node name="Seagulls" type="Node2D" parent="."]
 
 [node name="SeagullTimer" type="Timer" parent="Seagulls"]
-wait_time = 3.0
+wait_time = 1.5
 autostart = true
+
+[node name="ShaderLayer" type="CanvasLayer" parent="."]
+layer = 50
+
+[node name="Shader" type="ColorRect" parent="ShaderLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 1, 1, 1, 0 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [connection signal="timeout" from="Seagulls/SeagullTimer" to="." method="_on_SeagullTimer_timeout"]

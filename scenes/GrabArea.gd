@@ -7,11 +7,11 @@ var Tendency = 0.0
 func _on_SpawnTimer_timeout():
 	var pos = get_position()
 	var parent = get_parent()
-	if pos.y < 700.0 and get_overlapping_bodies().size() > 0:
+	if pos.y < 700.0:
 		var numberOfAreas = 1
 		if (randi() % 50) == 0:
 			numberOfAreas += 1
-		elif (randi() % 30) == 0:
+		elif (randi() % 30) == 0 or get_overlapping_bodies().size() == 0:
 			Tendency *= -1.0
 		for i in range(numberOfAreas):
 			if i > 0:
