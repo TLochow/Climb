@@ -185,6 +185,7 @@ limit_top = -1000
 limit_right = 3000
 limit_bottom = 750
 smoothing_enabled = true
+smoothing_speed = 1.0
 
 [node name="Sprite" type="Sprite" parent="PlayerBody"]
 texture = ExtResource( 1 )

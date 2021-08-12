@@ -11,7 +11,7 @@ func _ready():
 	SetHandsActive()
 
 func _physics_process(delta):
-	Body.rotation = lerp_angle(Body.rotation, 0.0, delta * 10.0)
+	Body.rotation = lerp_angle(Body.rotation, 0.0, delta * 100.0)
 
 func _input(event):
 	if event.is_action_pressed("mouse_click"):

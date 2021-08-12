@@ -37,7 +37,6 @@ shape = SubResource( 1 )
 [node name="Seagulls" type="Node2D" parent="."]
 
 [node name="SeagullTimer" type="Timer" parent="Seagulls"]
-wait_time = 1.5
 autostart = true
 
 [node name="Effects" type="Node2D" parent="."]

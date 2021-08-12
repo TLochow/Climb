@@ -24,26 +24,62 @@ var MaxZen = 1000.0
 var MaxPoints = 800000.0
 
 var IntroTexts = [
-	"""Test Text 1""",
-	"""Test Text 2""",
-	"""Test Text 3""",
-	"""Test Text 4""",
-	"""Test Text 5""",
-	"""Test Text 6"""
+	"""Why?""",
+	"""It’s been well over 10 years.""",
+	"""Why doesn’t she want him there?""",
+	"""Should I have just gone along with it?""",
+	"""I need time to think..."""
 ]
 var IntroTextPos = 0
 var IntroGoingLeft
 var FoundStartpoint = false
 
+var StoryTexts = [
+	"""Text 1""",
+	"""Text 2""",
+	"""Text 3""",
+	"""Text 4""",
+	"""Text 5""",
+	"""Text 6""",
+	"""Text 7""",
+	"""Text 8""",
+	"""Text 9""",
+	"""Text 10""",
+	"""Text 11""",
+	"""Text 12""",
+	"""Text 13""",
+	"""Text 14""",
+	"""Text 15""",
+	"""Text 16""",
+	"""Text 17""",
+	"""Text 18""",
+	"""Text 19""",
+	"""Text 20""",
+	"""Text 21""",
+	"""Text 22""",
+	"""Text 23""",
+	"""Text 24""",
+	"""Text 25""",
+	"""Text 26""",
+	"""Text 27""",
+	"""Text 28""",
+	"""Text 29""",
+	"""Text 30"""
+]
+var TextInterval = 800000.0
+var TextScore = 0.0
+var TextNumber = 0
+
 func _ready():
 	randomize()
+	TextInterval = 800000.0 / StoryTexts.size()
 	PlayIntroText()
 
 func PlayIntroText():
 	if IntroTextPos < IntroTexts.size():
 		var text = STORYTEXTSCENE.instance()
 		text.Text = IntroTexts[IntroTextPos]
-		text.set_position(Vector2(512.0, 256.0))
+		text.set_position(Vector2(640.0, 256.0))
 		text.connect("Done", self, "PlayIntroText")
 		TextNode.add_child(text)
 		IntroTextPos += 1
@@ -62,9 +98,22 @@ func _process(delta):
 		var playerHeight = Player.get_position().y
 		Zen = max(CurrentZenBase - playerHeight, 0.0)
 		if playerHeight < LastHeight:
-			StoryPoints += (LastHeight - playerHeight) * Zen
+			var pointsAdd = (LastHeight - playerHeight) * Zen
 			LastHeight = playerHeight
+			StoryPoints += pointsAdd
+			TextScore += pointsAdd
+			if TextScore >= TextInterval:
+				TextScore -= TextInterval
+				ShowStoryText()
 		SetZenEffect(delta)
+
+func ShowStoryText():
+	if TextNumber < StoryTexts.size():
+		var text = STORYTEXTSCENE.instance()
+		text.Text = StoryTexts[TextNumber]
+		TextNumber += 1
+		text.set_position(Vector2(640.0, 256.0))
+		TextNode.call_deferred("add_child", text)
 
 func SetZenEffect(delta):
 	var zenValue = min(Zen, MaxZen)

@@ -11,6 +11,8 @@ var TextLength
 var Position = 0
 
 func _ready():
+	print(Text)
+	print(get_position())
 	TextLength = Text.length()
 	TextTimer.start()
 
@@ -20,7 +22,7 @@ func _on_Timer_timeout():
 		Position += 1
 	else:
 		TextTimer.stop()
-		FadeTween.interpolate_property(self, "modulate", Color(1.0, 1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0, 0.0), 1.0, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+		FadeTween.interpolate_property(self, "modulate", Color(1.0, 1.0, 1.0, 1.0), Color(1.0, 1.0, 1.0, 0.0), 2.5, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
 		FadeTween.start()
 
 func _on_Tween_tween_all_completed():
