@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/TileMap.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Main.gd" type="Script" id=3]
@@ -6,6 +6,9 @@
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 6.0
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 20, 10 )
 
 [node name="Main" type="Node2D"]
 script = ExtResource( 3 )
@@ -56,5 +59,21 @@ __meta__ = {
 
 [node name="StoryTexts" type="Node2D" parent="UI"]
 
+[node name="EndTrigger" type="Area2D" parent="."]
+position = Vector2( 928, -600 )
+collision_layer = 32
+collision_mask = 32
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EndTrigger"]
+shape = SubResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="EndTween" type="Tween" parent="EndTrigger"]
+
 [connection signal="area_entered" from="StartPointFinder" to="." method="_on_StartPointFinder_area_entered"]
 [connection signal="timeout" from="Seagulls/SeagullTimer" to="." method="_on_SeagullTimer_timeout"]
+[connection signal="tween_all_completed" from="UI/ColorRect/Tween" to="." method="_on_Tween_tween_all_completed"]
+[connection signal="body_entered" from="EndTrigger" to="." method="_on_EndTrigger_body_entered"]
+[connection signal="tween_all_completed" from="EndTrigger/EndTween" to="." method="_on_EndTween_tween_all_completed"]
