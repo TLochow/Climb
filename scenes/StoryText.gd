@@ -9,16 +9,21 @@ onready var FadeTween = $Tween
 var Text
 var TextLength
 var Position = 0
+var Timeout = 0
 
 func _ready():
-	print(Text)
-	print(get_position())
 	TextLength = Text.length()
 	TextTimer.start()
 
 func _on_Timer_timeout():
-	if Position < TextLength:
-		TextBox.text = TextBox.text + Text.substr(Position, 1)
+	if Timeout > 0:
+		Timeout -= 1
+	elif Position < TextLength:
+		var nextChar = Text.substr(Position, 1)
+		if nextChar == '_':
+			Timeout = 10
+		else:
+			TextBox.text = TextBox.text + nextChar
 		Position += 1
 	else:
 		TextTimer.stop()
