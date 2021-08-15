@@ -1,5 +1,7 @@
 extends RigidBody2D
 
+var HINTTEXTSCENE = preload("res://scenes/HintText.tscn")
+
 export(bool) var IsLeftHand = false
 
 onready var Player = get_tree().get_nodes_in_group("Player")[0]
@@ -51,11 +53,23 @@ func SetActive(value):
 func CanGrab():
 	if not TakesInput:
 		return false
-	var canGrab = MountainDetector.get_overlapping_areas().size() > 0 and GrabCooldown < 0.1
+	var canGrab = true
+	if GrabCooldown > 0.1:
+		canGrab = false
+		ShowHintText("Too early!")
+	elif MountainDetector.get_overlapping_areas().size() == 0:
+		canGrab = false
+		ShowHintText("Missed!")
 	if not canGrab:
 		Player.LooseFocus()
 		LooseGrip()
 	return canGrab
+
+func ShowHintText(text):
+	var hintText = HINTTEXTSCENE.instance()
+	hintText.set_position(get_global_position())
+	hintText.Text = text
+	get_tree().root.call_deferred("add_child", hintText)
 
 func LooseGrip():
 	if TakesInput:

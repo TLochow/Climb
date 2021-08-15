@@ -180,7 +180,7 @@ func _on_SeagullTimer_timeout():
 	seagull.set_position(Vector2(spawnWidth, spawnHeight))
 	SeagullsNode.add_child(seagull)
 
-func _on_StartPointFinder_area_entered(area):
+func _on_StartPointFinder_area_entered(_area):
 	if not FoundStartpoint:
 		FoundStartpoint = true
 		var player = PLAYERSCENE.instance()
